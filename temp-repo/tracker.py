@@ -12,6 +12,7 @@ import numpy as np
 import requests
 # library that provides a way to interact with the operating system
 import os
+
 IMG_PATH = "image.jpg"
 API_KEY = "zPYon8OkapXPB5JFZ2h3"
 DISTANCE_TO_OBJECT = 1000  # mm
