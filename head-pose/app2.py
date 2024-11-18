@@ -7,10 +7,14 @@ from face_detection import FaceDetector
 from mark_detection import MarkDetector
 from pose_estimation import PoseEstimator
 from utils import refine
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Constants
 IMG_PATH = "image.jpg"
-API_KEY = "zPYon8OkapXPB5JFZ2h3"
+API_KEY = os.getenv("ROBOFLOW-INFERENCE-API-KEY")
 DISTANCE_TO_OBJECT = 1000  # mm
 HEIGHT_OF_HUMAN_FACE = 250  # mm
 GAZE_DETECTION_URL = (
