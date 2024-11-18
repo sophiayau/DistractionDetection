@@ -156,8 +156,8 @@ class PoseEstimator:
         pitch, yaw, roll = self.rotation_matrix_to_angles(rotation_vector)
         
         # Define thresholds (adjust based on further testing)
-        pitch_threshold = (-15, 10)  # Allow some variability in pitch
-        yaw_threshold = (-20, 16)     # Reasonable range for yaw
+        pitch_threshold = (-20, 40)  # Allow some variability in pitch
+        yaw_threshold = (-35, 30)     # Reasonable range for yaw
         roll_threshold = (-180, 180) # Centered around -180 degree roll
         # print("pitch, yaw, roll", pitch, yaw, roll)
         # Check if head is roughly considered 'facing forward'
