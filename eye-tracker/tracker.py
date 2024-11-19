@@ -12,9 +12,12 @@ import numpy as np
 import requests
 # library that provides a way to interact with the operating system
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 IMG_PATH = "image.jpg"
-API_KEY = "gHZo6BZieJTjUDdtomr3"
+API_KEY = os.getenv("ROBOFLOW-INFERENCE-API-KEY")
 DISTANCE_TO_OBJECT = 1000  # mm
 HEIGHT_OF_HUMAN_FACE = 250  # mm
 GAZE_DETECTION_URL = (
