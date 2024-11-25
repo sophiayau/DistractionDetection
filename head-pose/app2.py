@@ -18,7 +18,7 @@ API_KEY = os.getenv("ROBOFLOW-INFERENCE-API-KEY")
 DISTANCE_TO_OBJECT = 1000  # mm
 HEIGHT_OF_HUMAN_FACE = 250  # mm
 GAZE_DETECTION_URL = (
-    "http://127.0.0.1:9001/gaze/gaze_detection?api_key=" + API_KEY
+    "http://localhost:9001/gaze/gaze_detection?api_key=" + API_KEY
 )
 
 
@@ -105,7 +105,7 @@ def main():
 
     frame_placeholder = st.empty()
     yaw_pitch_placeholder = st.empty()
-
+    frame_counter = 0
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -137,7 +137,9 @@ def main():
                 2,
             )
 
+            # frame_counter+=1
             gazes = detect_gazes(frame)
+            # if frame_counter % 15 == 0:
             if gazes:
                 for gaze in gazes:
                     frame = draw_gaze(frame, gaze)
