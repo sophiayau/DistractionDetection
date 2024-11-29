@@ -9,6 +9,7 @@ from pose_estimation import PoseEstimator
 from utils import refine
 import os
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -20,6 +21,40 @@ HEIGHT_OF_HUMAN_FACE = 250  # mm
 GAZE_DETECTION_URL = (
     "http://localhost:9001/gaze/gaze_detection?api_key=" + API_KEY
 )
+
+MAX_YAW_LEFT = -0.5  # Maximum yaw for left (e.g., -45 degrees)
+MAX_YAW_RIGHT = 0.5  # Maximum yaw for right (e.g., 45 degrees)
+MAX_PITCH_UP = -0.5  # Maximum pitch for up (e.g., -30 degrees)
+MAX_PITCH_DOWN = 0.5  # Maximum pitch for down (e.g., 30 degrees)
+
+def check_for_distraction(gaze):
+    """
+    Check if the gaze is out of range (distraction) based on yaw (left-right) and pitch (top-bottom).
+    """
+    yaw = gaze["yaw"]
+    pitch = gaze["pitch"]
+
+    # Check if yaw or pitch exceeds defined distraction thresholds
+    if yaw < MAX_YAW_LEFT or yaw > MAX_YAW_RIGHT or pitch < MAX_PITCH_UP or pitch > MAX_PITCH_DOWN:
+        return True
+    return False
+
+MAX_YAW_LEFT = -0.5  # Maximum yaw for left (e.g., -45 degrees)
+MAX_YAW_RIGHT = 0.5  # Maximum yaw for right (e.g., 45 degrees)
+MAX_PITCH_UP = -0.5  # Maximum pitch for up (e.g., -30 degrees)
+MAX_PITCH_DOWN = 0.5  # Maximum pitch for down (e.g., 30 degrees)
+
+def check_for_distraction(gaze):
+    """
+    Check if the gaze is out of range (distraction) based on yaw (left-right) and pitch (top-bottom).
+    """
+    yaw = gaze["yaw"]
+    pitch = gaze["pitch"]
+
+    # Check if yaw or pitch exceeds defined distraction thresholds
+    if yaw < MAX_YAW_LEFT or yaw > MAX_YAW_RIGHT or pitch < MAX_PITCH_UP or pitch > MAX_PITCH_DOWN:
+        return True
+    return False
 
 
 def detect_gazes(frame: np.ndarray):
@@ -45,7 +80,6 @@ def detect_gazes(frame: np.ndarray):
         print(f"Error in detect_gazes: {e}")
         return []
 
-
 def draw_gaze(img: np.ndarray, gaze: dict):
     """Draw gaze direction and keypoints on the image."""
     face = gaze["face"]
@@ -55,8 +89,6 @@ def draw_gaze(img: np.ndarray, gaze: dict):
     y_max = int(face["y"] + face["height"] / 2)
     cv2.rectangle(img, (x_min, y_min), (x_max, y_max), (255, 0, 0), 3)
 
-    # print(gaze['yaw'], gaze["pitch"])
-    
     # Draw gaze arrow
     _, imgW = img.shape[:2]
     arrow_length = imgW / 2
@@ -78,7 +110,6 @@ def draw_gaze(img: np.ndarray, gaze: dict):
         cv2.circle(img, (x, y), 2, (0, 255, 0), -1)
 
     return img
-
 
 def main():
     st.title("Distraction Detection App")
@@ -105,7 +136,22 @@ def main():
 
     frame_placeholder = st.empty()
     yaw_pitch_placeholder = st.empty()
-    frame_counter = 0
+    frame_counter = 0    timer_placeholder = st.empty()
+    summary_placeholder = st.empty()
+
+    focused_time = 0
+    distracted_time = 0
+    start_time = None
+    current_status = None
+    timer_running = False
+    timer_ended = False
+
+    col1, col2 = st.columns(2)
+    with col1:
+        start_btn = st.button("Start Timer")
+    with col2:
+        end_btn = st.button("End Timer")
+
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -124,8 +170,20 @@ def main():
             marks[:, 0] += x1
             marks[:, 1] += y1
 
-            distraction_status, pose_vectors = pose_estimator.detect_distraction(marks)
-            status_text = "Distracted" if distraction_status else "Focused"
+            head_distraction, pose_vectors = pose_estimator.detect_distraction(marks)
+
+            # getting distraction status from gaze functions
+            gazes = detect_gazes(frame)
+            if gazes:
+                for gaze in gazes:
+                    eye_distraction = check_for_distraction(gaze)
+                    frame = draw_gaze(frame, gaze)
+                    yaw_pitch_placeholder.write(f"Yaw: {gaze['yaw']:.2f}, Pitch: {gaze['pitch']:.2f}")
+
+            combined_distraction = head_distraction or eye_distraction
+
+            # displayed text --> combined results from head and eye gaze
+            status_text = "Distracted" if combined_distraction else "Focused"
 
             cv2.putText(
                 frame,
@@ -133,7 +191,7 @@ def main():
                 (10, 50),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.5,
-                (0, 255, 0) if not distraction_status else (0, 0, 255),
+                (0, 255, 0) if not combined_distraction else (0, 0, 255),
                 2,
             )
 
@@ -147,8 +205,41 @@ def main():
 
             frame_placeholder.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
 
-    cap.release()
 
+            current_status = status_text
+
+            # Timer Logic
+            now = time.time()
+            if start_btn and not timer_running:
+                timer_running = True
+                start_time = now
+
+            if timer_running:
+                elapsed_time = now - start_time
+                if current_status == "Focused":
+                    focused_time += elapsed_time
+                elif current_status == "Distracted":
+                    distracted_time += elapsed_time
+                start_time = now  # Update for the next frame
+
+                timer_placeholder.write(
+                    f"Focused Time: {focused_time:.2f}s | Distracted Time: {distracted_time:.2f}s"
+                )
+
+            if end_btn and timer_running:
+                timer_running = False
+                timer_ended = True
+                elapsed_time = now - start_time
+                if current_status == "Focused":
+                    focused_time += elapsed_time
+                elif current_status == "Distracted":
+                    distracted_time += elapsed_time
+                break  
+
+        if timer_ended:
+            break
+
+    cap.release()
 
 if __name__ == "__main__":
     main()
