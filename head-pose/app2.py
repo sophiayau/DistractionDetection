@@ -146,6 +146,8 @@ def main():
     timer_running = False
     timer_ended = False
 
+    eyedistraction =None
+
     col1, col2 = st.columns(2)
     with col1:
         start_btn = st.button("Start Timer")
