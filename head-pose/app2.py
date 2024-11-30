@@ -10,6 +10,9 @@ from utils import refine
 import os
 from dotenv import load_dotenv
 import time
+import threading
+import queue
+
 
 load_dotenv()
 
@@ -27,22 +30,8 @@ MAX_YAW_RIGHT = 0.5  # Maximum yaw for right (e.g., 45 degrees)
 MAX_PITCH_UP = -0.5  # Maximum pitch for up (e.g., -30 degrees)
 MAX_PITCH_DOWN = 0.5  # Maximum pitch for down (e.g., 30 degrees)
 
-def check_for_distraction(gaze):
-    """
-    Check if the gaze is out of range (distraction) based on yaw (left-right) and pitch (top-bottom).
-    """
-    yaw = gaze["yaw"]
-    pitch = gaze["pitch"]
+last_eye_distraction = None
 
-    # Check if yaw or pitch exceeds defined distraction thresholds
-    if yaw < MAX_YAW_LEFT or yaw > MAX_YAW_RIGHT or pitch < MAX_PITCH_UP or pitch > MAX_PITCH_DOWN:
-        return True
-    return False
-
-MAX_YAW_LEFT = -0.5  # Maximum yaw for left (e.g., -45 degrees)
-MAX_YAW_RIGHT = 0.5  # Maximum yaw for right (e.g., 45 degrees)
-MAX_PITCH_UP = -0.5  # Maximum pitch for up (e.g., -30 degrees)
-MAX_PITCH_DOWN = 0.5  # Maximum pitch for down (e.g., 30 degrees)
 
 def check_for_distraction(gaze):
     """
@@ -56,6 +45,28 @@ def check_for_distraction(gaze):
         return True
     return False
 
+def async_gaze_detection(input_queue, output_queue):
+    """Run gaze detection in a separate thread."""
+    global last_eye_distraction  # Use the global variable to persist the result
+
+    while True:
+        # Wait for a frame from the input queue
+        frame = input_queue.get()
+        if frame is None:  # Stop the thread if None is sent
+            break
+
+        # Perform gaze detection and check for distraction
+        gazes = detect_gazes(frame)
+        eye_distraction = False
+        if gazes:
+            for gaze in gazes:
+                eye_distraction = check_for_distraction(gaze)
+
+        # Update the global variable
+        last_eye_distraction = eye_distraction
+
+        # Send the distraction result to the output queue
+        output_queue.put(eye_distraction)
 
 def detect_gazes(frame: np.ndarray):
     """Detect gazes from the inference server."""
@@ -113,20 +124,26 @@ def draw_gaze(img: np.ndarray, gaze: dict):
 
 def main():
     st.title("Distraction Detection App")
-    
-    video_src = st.sidebar.selectbox("Select Video Source", ("Webcam", "Video File"))
+    distraction_text_placeholder = st.empty()
+    combined_distraction = None
+    focused_time_placeholder = st.empty()
+    distracted_time_placeholder = st.empty()
+    # Queues for threading
+    input_queue = queue.Queue(maxsize=1)  # Queue for sending frames to the thread
+    output_queue = queue.Queue(maxsize=1)  # Queue for receiving distraction results
 
-    if video_src == "Video File":
-        video_file = st.sidebar.file_uploader("Upload a Video File", type=["mp4", "avi", "mov"])
-        if video_file is not None:
-            video_src = video_file
-        else:
-            st.warning("Please upload a video file.")
-            return
-    else:
-        video_src = 0  # Webcam index
+    # Threading in attempt to prevent eye detection inference calls from slowing down the application 
+    thread = threading.Thread(target=async_gaze_detection, args=(input_queue, output_queue))
+    thread.daemon = True
+    thread.start()
+    video_src = 0  # Webcam index
 
-    cap = cv2.VideoCapture(video_src if video_src == 0 else video_file)
+    cap = cv2.VideoCapture(video_src)
+
+    if not cap.isOpened():
+        st.error("Unable to access the webcam. Please make sure it's connected and try again.")
+        return
+
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
@@ -136,17 +153,12 @@ def main():
 
     frame_placeholder = st.empty()
     yaw_pitch_placeholder = st.empty()
-    frame_counter = 0    timer_placeholder = st.empty()
-    summary_placeholder = st.empty()
 
     focused_time = 0
     distracted_time = 0
     start_time = None
-    current_status = None
     timer_running = False
     timer_ended = False
-
-    eyedistraction =None
 
     col1, col2 = st.columns(2)
     with col1:
@@ -162,6 +174,7 @@ def main():
         if video_src == 0:
             frame = cv2.flip(frame, 2)
 
+        # Run face and pose estimation
         faces, _ = face_detector.detect(frame, 0.7)
         if len(faces) > 0:
             face = refine(faces, frame_width, frame_height, 0.15)[0]
@@ -174,74 +187,68 @@ def main():
 
             head_distraction, pose_vectors = pose_estimator.detect_distraction(marks)
 
-            # getting distraction status from gaze functions
-            gazes = detect_gazes(frame)
-            if gazes:
-                for gaze in gazes:
-                    eye_distraction = check_for_distraction(gaze)
-                    frame = draw_gaze(frame, gaze)
-                    yaw_pitch_placeholder.write(f"Yaw: {gaze['yaw']:.2f}, Pitch: {gaze['pitch']:.2f}")
+            # Send frames to the gaze detection thread every 15 frames
+            if input_queue.empty():
+                input_queue.put(frame)
 
+            # Retrieve distraction status from the output queue
+            eye_distraction = last_eye_distraction
+            if not output_queue.empty():
+                eye_distraction = output_queue.get()
+
+            # Combine distraction results
             combined_distraction = head_distraction or eye_distraction
 
-            # displayed text --> combined results from head and eye gaze
-            status_text = "Distracted" if combined_distraction else "Focused"
+        # Update UI elements
+        status_text = "Distracted" if combined_distraction else "Focused"
+        # distraction_text_placeholder.write(f"Combined Distraction Status: {status_text}")
+        distraction_text_placeholder.markdown(
+            f"""
+            <div style="
+                font-size: 48px; 
+                font-weight: bold; 
+                text-align: center; 
+                color: {'red' if status_text == 'Distracted' else 'green'}; 
+                background-color: {'#ffcccc' if status_text == 'Distracted' else '#ccffcc'};
+                border: 2px solid {'red' if status_text == 'Distracted' else 'green'};
+                border-radius: 10px;
+                padding: 10px;
+                width: {frame_placeholder.width}px; /* Match the image width */
+                max-width: 100%; 
+                margin: 0 auto; /* Center the text */
+            ">
+                {status_text}
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        frame_placeholder.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
 
-            cv2.putText(
-                frame,
-                f"Status: {status_text}",
-                (10, 50),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.5,
-                (0, 255, 0) if not combined_distraction else (0, 0, 255),
-                2,
-            )
+        # Timer logic
+        now = time.time()
+        if start_btn and not timer_running:
+            timer_running = True
+            start_time = now
 
-            # frame_counter+=1
-            gazes = detect_gazes(frame)
-            # if frame_counter % 15 == 0:
-            if gazes:
-                for gaze in gazes:
-                    frame = draw_gaze(frame, gaze)
-                    yaw_pitch_placeholder.write(f"Yaw: {gaze['yaw']:.2f}, Pitch: {gaze['pitch']:.2f}")
+        if timer_running:
+            elapsed_time = now - start_time
+            if combined_distraction:
+                distracted_time += elapsed_time
+            else:
+                focused_time += elapsed_time
+            start_time = now  # Update for the next frame
 
-            frame_placeholder.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
+            focused_time_placeholder.write(f"Focused Time: {focused_time:.2f}s")
+            distracted_time_placeholder.write(f"Distracted Time: {distracted_time:.2f}s")
 
-
-            current_status = status_text
-
-            # Timer Logic
-            now = time.time()
-            if start_btn and not timer_running:
-                timer_running = True
-                start_time = now
-
-            if timer_running:
-                elapsed_time = now - start_time
-                if current_status == "Focused":
-                    focused_time += elapsed_time
-                elif current_status == "Distracted":
-                    distracted_time += elapsed_time
-                start_time = now  # Update for the next frame
-
-                timer_placeholder.write(
-                    f"Focused Time: {focused_time:.2f}s | Distracted Time: {distracted_time:.2f}s"
-                )
-
-            if end_btn and timer_running:
-                timer_running = False
-                timer_ended = True
-                elapsed_time = now - start_time
-                if current_status == "Focused":
-                    focused_time += elapsed_time
-                elif current_status == "Distracted":
-                    distracted_time += elapsed_time
-                break  
-
-        if timer_ended:
+        if end_btn and timer_running:
+            timer_running = False
             break
 
     cap.release()
+    input_queue.put(None)  # Stop the thread
+    thread.join()
+
 
 if __name__ == "__main__":
     main()
