@@ -91,36 +91,36 @@ def detect_gazes(frame: np.ndarray):
         print(f"Error in detect_gazes: {e}")
         return []
 
-def draw_gaze(img: np.ndarray, gaze: dict):
-    """Draw gaze direction and keypoints on the image."""
-    face = gaze["face"]
-    x_min = int(face["x"] - face["width"] / 2)
-    x_max = int(face["x"] + face["width"] / 2)
-    y_min = int(face["y"] - face["height"] / 2)
-    y_max = int(face["y"] + face["height"] / 2)
-    cv2.rectangle(img, (x_min, y_min), (x_max, y_max), (255, 0, 0), 3)
+# def draw_gaze(img: np.ndarray, gaze: dict):
+#     """Draw gaze direction and keypoints on the image."""
+#     face = gaze["face"]
+#     x_min = int(face["x"] - face["width"] / 2)
+#     x_max = int(face["x"] + face["width"] / 2)
+#     y_min = int(face["y"] - face["height"] / 2)
+#     y_max = int(face["y"] + face["height"] / 2)
+#     cv2.rectangle(img, (x_min, y_min), (x_max, y_max), (255, 0, 0), 3)
 
-    # Draw gaze arrow
-    _, imgW = img.shape[:2]
-    arrow_length = imgW / 2
-    dx = -arrow_length * np.sin(gaze["yaw"]) * np.cos(gaze["pitch"])
-    dy = -arrow_length * np.sin(gaze["pitch"])
-    cv2.arrowedLine(
-        img,
-        (int(face["x"]), int(face["y"])),
-        (int(face["x"] + dx), int(face["y"] + dy)),
-        (0, 0, 255),
-        2,
-        cv2.LINE_AA,
-        tipLength=0.18,
-    )
+#     # Draw gaze arrow
+#     _, imgW = img.shape[:2]
+#     arrow_length = imgW / 2
+#     dx = -arrow_length * np.sin(gaze["yaw"]) * np.cos(gaze["pitch"])
+#     dy = -arrow_length * np.sin(gaze["pitch"])
+#     cv2.arrowedLine(
+#         img,
+#         (int(face["x"]), int(face["y"])),
+#         (int(face["x"] + dx), int(face["y"] + dy)),
+#         (0, 0, 255),
+#         2,
+#         cv2.LINE_AA,
+#         tipLength=0.18,
+#     )
 
-    # Draw keypoints
-    for keypoint in face["landmarks"]:
-        x, y = int(keypoint["x"]), int(keypoint["y"])
-        cv2.circle(img, (x, y), 2, (0, 255, 0), -1)
+#     # Draw keypoints
+#     for keypoint in face["landmarks"]:
+#         x, y = int(keypoint["x"]), int(keypoint["y"])
+#         cv2.circle(img, (x, y), 2, (0, 255, 0), -1)
 
-    return img
+#     return img
 
 def main():
     st.title("Distraction Detection App")
@@ -201,7 +201,6 @@ def main():
 
         # Update UI elements
         status_text = "Distracted" if combined_distraction else "Focused"
-        # distraction_text_placeholder.write(f"Combined Distraction Status: {status_text}")
         distraction_text_placeholder.markdown(
             f"""
             <div style="
