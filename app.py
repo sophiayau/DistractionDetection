@@ -22,7 +22,7 @@ API_KEY = os.getenv("ROBOFLOW-INFERENCE-API-KEY")
 DISTANCE_TO_OBJECT = 1000  # mm
 HEIGHT_OF_HUMAN_FACE = 250  # mm
 GAZE_DETECTION_URL = (
-    "http://localhost:9001/gaze/gaze_detection?api_key=" + API_KEY
+    f"http://{os.getenv('CONTAINER-PORT')}:9001/gaze/gaze_detection?api_key=" + API_KEY
 )
 
 MAX_YAW_LEFT = -0.5  # Maximum yaw for left (e.g., -45 degrees)
