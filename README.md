@@ -7,4 +7,6 @@
 * Contacts
 
 ## About
-**_Focus Track_ is a real-time distraction detection application that monitors and analyzes gaze direction and head movement using _computer vision_ and _machine learning_. Our application allows for users to understand their attention span and find ways to regain their focus back.**
+**_Focus Track_ is a real-time distraction detection application that monitors and analyzes gaze direction and head movement using _computer vision_ and _machine learning_. Our application allows users to understand their attention span and find ways to regain their focus back.**
+
+In today’s digital age, technology, smartphones, and social media platforms like TikTok has negatively impacted our ability to concentrate on a single task for an extended period. These platforms captivate attention with endless streams of short-form content, making it especially difficult for younger generations to maintain focus. Recognizing the severity of this issue, our project aims to help users understand and analyze their patterns of focus and distraction. By becoming aware of these habits, individuals can take proactive steps to improve their focus and regain control over their time and productivity.
