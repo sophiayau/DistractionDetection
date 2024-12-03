@@ -26,6 +26,9 @@ Users can start and end the program. We added a timer function that displays the
 ## Challenges 🤔
 
 ## Getting Started ✅
+```bash
+git clone https://github.com/sophiayau/DistractionDetection.git
+
 
 ## Contacts 👩‍💻👨‍💻
 **Sophia Yau**  
