@@ -16,8 +16,9 @@ In today’s digital age, technology, smartphones, and social media platforms li
 **Eye Gaze Detection**  
 We implemented a gaze detection model and set the pitch and yaw thresholds to recognize when someones gaze is no longer at the screen.
 
-- **Head Pose Estimation**  
+**Head Pose Estimation**  
 Alongside the gaze detection, we also added a head pose estimation and once again set our thresholds to recognize when someone is not facing the screen.
-- **Timer**  
+
+**Timer**  
 Users can start and end the program. We added a timer function that displays the total time that the user was distracted/focused. This allows users to gain a better understanding of their distracted to focused ratio. 
 
