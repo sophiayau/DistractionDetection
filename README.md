@@ -2,9 +2,9 @@
 
 ## Table of Contents
 * [About](#about)
-* Challenges
-* Using Our Application
-* Contacts
+* [Challenges](#challenges)
+* [Using Our Application](#using-our-application)
+* [Contacts](#contacts)
 
 ## About
 **_Focus Track_ is a real-time distraction detection application that monitors and analyzes gaze direction and head movement using _computer vision_ and _machine learning_. Our application allows users to understand their attention span and find ways to regain their focus back.**
@@ -21,4 +21,10 @@ Alongside the gaze detection, we also added a head pose estimation and once agai
 
 **Timer**  
 Users can start and end the program. We added a timer function that displays the total time that the user was distracted/focused. This allows users to gain a better understanding of their distracted to focused ratio. 
+
+## Challenges
+
+## Using Our Application
+
+## Contacts
 
