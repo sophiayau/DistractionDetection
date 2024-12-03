@@ -1,7 +1,7 @@
 ![Header](./banner.jpg)
 
 ## Table of Contents
-* [About] (##about)
+* [About](#about)
 * Challenges
 * Using Our Application
 * Contacts
