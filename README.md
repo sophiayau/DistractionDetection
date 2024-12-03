@@ -3,8 +3,8 @@
 ## Table of Contents
 * [About](#about-)
 * [Challenges](#challenges-)
-* [Getting Started](#getting-started)
-* [Contacts](#contacts)
+* [Getting Started](#getting-started-)
+* [Contacts](#contacts-)
 
 ## About 💡
 **_Focus Track_ is a real-time distraction detection application that monitors and analyzes gaze direction and head movement using _computer vision_ and _machine learning_. Our application allows users to understand their attention span and find ways to regain their focus back.**
@@ -22,11 +22,11 @@ Alongside the gaze detection, we also added a head pose estimation and once agai
 **Timer**  
 Users can start and end the program. We added a timer function that displays the total time that the user was distracted/focused. This allows users to gain a better understanding of their distracted to focused ratio. 
 
-## Challenges
+## Challenges 🤔
 
-## Getting Started
+## Getting Started ✅
 
-## Contacts
+## Contacts 👩‍💻👨‍💻
 **Sophia Yau**  
 [GitHub](https://github.com/sophiayau) - [LinkedIn](https://www.linkedin.com/in/sophiayau/)  
   
