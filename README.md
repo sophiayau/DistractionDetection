@@ -1,4 +1,3 @@
-# Focus Track
 ![Header](./banner.jpg)
 
 
