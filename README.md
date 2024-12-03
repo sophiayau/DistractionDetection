@@ -40,6 +40,7 @@ python app.py
 
 ## Contacts 👩‍💻👨‍💻
 **Sophia Yau**  
+[Image](https://cdn-icons-png.flaticon.com/256/25/25231.png)
 [GitHub](https://github.com/sophiayau) - [LinkedIn](https://www.linkedin.com/in/sophiayau/)  
   
 **Ye Htut Maung (Mike)**  
