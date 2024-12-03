@@ -29,6 +29,7 @@ Users can start and end the program. We added a timer function that displays the
 ## Contacts
 **Sophia Yau**  
 [GitHub](https://github.com/sophiayau) - [LinkedIn](https://www.linkedin.com/in/sophiayau/)  
+  
 **Ye Htut Maung (Mike)**  
 [GitHub](https://github.com/ye-htut-maung) - [LinkedIn](https://www.linkedin.com/in/ye-htut-maung/)  
 **Afnan Ebrahim**  
