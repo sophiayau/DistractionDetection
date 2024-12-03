@@ -67,6 +67,7 @@ def detect_gazes(frame: np.ndarray):
 # takes in an img of type NumPy array and one dictionary from our list of dictionaries earlier
 # draw face bounding box
 def draw_gaze(img: np.ndarray, gaze: dict):
+    print(gaze["yaw"], gaze["pitch"])
     
     # takes in face values from our dictionary
     # includes coordinates, height, width, etc
@@ -161,7 +162,7 @@ if __name__ == "__main__":
 
         # Display the frame
         cv2.imshow("Gaze Tracker", frame)
-
+        cv2.putText(frame, gaze["yaw"], gaze["pitch"])
         # Quit on pressing 'q'
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
