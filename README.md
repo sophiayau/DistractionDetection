@@ -27,7 +27,17 @@ Users can start and end the program. We added a timer function that displays the
 
 ## Getting Started ✅
 ```bash
+# Clone our repository
 git clone https://github.com/sophiayau/DistractionDetection.git
+
+# Navigate into the repo
+cd DistractionDetection
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the application
+python app.py
 ```
 
 
