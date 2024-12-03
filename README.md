@@ -27,10 +27,10 @@ Users can start and end the program. We added a timer function that displays the
 ## Getting Started
 
 ## Contacts
-**Sophia Yau**
-[GitHub](https://github.com/sophiayau) - [LinkedIn](https://www.linkedin.com/in/sophiayau/)
-**Ye Htut Maung (Mike)**
-[GitHub](https://github.com/ye-htut-maung) - [LinkedIn](https://www.linkedin.com/in/ye-htut-maung/)
-**Afnan Ebrahim**
+**Sophia Yau**  
+[GitHub](https://github.com/sophiayau) - [LinkedIn](https://www.linkedin.com/in/sophiayau/)  
+**Ye Htut Maung (Mike)**  
+[GitHub](https://github.com/ye-htut-maung) - [LinkedIn](https://www.linkedin.com/in/ye-htut-maung/)  
+**Afnan Ebrahim**  
 [GitHub](https://github.com/Afnan214) - [LinkedIn](https://www.linkedin.com/in/afnan214/)
 
