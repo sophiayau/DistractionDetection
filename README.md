@@ -40,7 +40,7 @@ python app.py
 
 ## Contacts 👩‍💻👨‍💻
 **Sophia Yau**  
-[![image](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)(https://github.com/sophiayau)]
+[![image](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sophiayau)
 [GitHub](https://github.com/sophiayau) - [LinkedIn](https://www.linkedin.com/in/sophiayau/)  
   
 **Ye Htut Maung (Mike)**  
