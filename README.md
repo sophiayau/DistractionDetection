@@ -2,7 +2,6 @@
 
 ## Table of Contents
 * [About](#about-)
-* [Challenges](#challenges-)
 * [Getting Started](#getting-started-)
 * [Contacts](#contacts-)
 
@@ -22,8 +21,6 @@ Alongside the gaze detection, we also added a head pose estimation and once agai
 
 **Timer**  
 Users can start and end the program. We added a timer function that displays the total time that the user was distracted/focused. This allows users to gain a better understanding of their distracted to focused ratio. 
-
-## Challenges 🤔
 
 ## Getting Started ✅
 ```bash
