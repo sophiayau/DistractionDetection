@@ -22,7 +22,8 @@ We implemented a gaze detection model to recognize when someones gaze is no long
 Alongside the gaze detection, we also added a head pose estimation and once again set our thresholds to recognize when someone is not facing the screen. This model combined with the gaze model allows us to determine whether someone is distracted or focused.
 
 **Timer**  
-Users can start and end the program. We added a timer function that displays the total time that the user was distracted/focused. This allows users to gain a better understanding of their distracted to focused ratio. 
+Users can start and end the program. We added a timer function that displays the total time that the user was distracted/focused. This allows users to gain a better understanding of their distracted to focused ratio.  
+  
 
 ## Getting Started ✅
 ```bash
