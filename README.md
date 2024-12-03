@@ -3,7 +3,7 @@
 ## Table of Contents
 * [About](#about-)
 * [Getting Started](#getting-started-)
-* [Contacts](#contacts-)
+* [Contact Us](#contact-us-)
 
 ## About 💡
 **_Focus Track_ is a real-time distraction detection application that monitors and analyzes gaze direction and head movement using computer vision and machine learning. Our application allows users to understand their attention span and find ways to regain their focus back.**  
@@ -41,7 +41,7 @@ python app.py
 ```
 
 
-## Contacts 👩‍💻👨‍💻
+## Contact Us 👩‍💻👨‍💻
 **Sophia Yau**  
   
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/sophiayau)
