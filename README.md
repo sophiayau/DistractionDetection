@@ -14,7 +14,7 @@ In today’s digital age, technology, smartphones, and social media platforms li
 
 ### Key Features
 **Eye Gaze Detection**  
-We implemented a gaze detection model and set the pitch and yaw thresholds to recognize when someones gaze is no longer at the screen.
+We implemented a gaze detection model to recognize when someones gaze is no longer at the screen. For each frame, it returns us the pitch and yaw and we use these numbers to set thresholds.
 
 **Head Pose Estimation**  
 Alongside the gaze detection, we also added a head pose estimation and once again set our thresholds to recognize when someone is not facing the screen. This model combined with the gaze model allows us to determine whether someone is distracted or focused.
