@@ -10,7 +10,7 @@
 <img src="./demo.gif" width="350" />
 
 ### Problem Statement 🎯
-In today’s digital age, technology, smartphones, and social media platforms like TikTok has negatively impacted our ability to concentrate on a single task for an extended period. These platforms captivate attention with endless streams of short-form content, making it especially difficult for younger generations to maintain focus.  
+In today’s digital age, technology, smartphones, and social media platforms like TikTok have negatively impacted our ability to concentrate on a single task for an extended period. These platforms display endless streams of short-form content, making it especially difficult for younger generations to maintain focused.  
   
 Our project aims to help users understand and analyze their patterns of focus and distraction. By becoming aware of these habits, individuals can take proactive steps to improve their focus and regain control over their time and productivity.
 
