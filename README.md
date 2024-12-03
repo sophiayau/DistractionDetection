@@ -13,7 +13,7 @@
 In today’s digital age, technology, smartphones, and social media platforms like TikTok has negatively impacted our ability to concentrate on a single task for an extended period. These platforms captivate attention with endless streams of short-form content, making it especially difficult for younger generations to maintain focus. Recognizing the severity of this issue, our project aims to help users understand and analyze their patterns of focus and distraction. By becoming aware of these habits, individuals can take proactive steps to improve their focus and regain control over their time and productivity.
 
 ### Key Features
-- **Eye Gaze Detection**  
+**Eye Gaze Detection**  
 We implemented a gaze detection model and set the pitch and yaw thresholds to recognize when someones gaze is no longer at the screen.
 
 - **Head Pose Estimation**  
